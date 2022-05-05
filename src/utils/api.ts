@@ -28,7 +28,6 @@ export interface VideoListData {
 export async function fetchYoutubeChannelById() {
   const url = `https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=${CHANNEL_ID}&order=date&key=${API_KEY}&maxResults=10`;
   const res = await fetch(url);
-  console.log("res", await res.json());
 
   if (!res.ok) throw new Error("Can not get video of this channel");
 

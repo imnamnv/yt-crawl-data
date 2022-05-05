@@ -12,6 +12,7 @@ import "./popup.css";
 const App: React.FC<{}> = () => {
   const [videoList, setVideoList] = useState<VideoListData>({ items: [] });
   const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<any>(null);
 
   useEffect(() => {
     fetchYoutubeChannelById()
@@ -20,11 +21,11 @@ const App: React.FC<{}> = () => {
         setLoading(false);
       })
       .catch((error) => {
-        console.log("error", error);
+        setError(error);
       });
   }, []);
 
-  if (loading)
+  if (loading && !Boolean(error))
     return (
       <Box style={{ display: "flex", alignItems: "center" }}>
         <CircularProgress size={20} />
@@ -33,6 +34,16 @@ const App: React.FC<{}> = () => {
         </Typography>
       </Box>
     );
+
+  if (Boolean(error)) {
+    return (
+      <Box>
+        <Typography style={{ marginLeft: "10px" }} variant="h5">
+          {error.message}
+        </Typography>
+      </Box>
+    );
+  }
 
   return (
     <>

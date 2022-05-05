@@ -15,11 +15,12 @@ chrome.alarms.onAlarm.addListener(() => {
 const checkLive = () => {
   fetchYoutubeChannelById().then((videoList) => {
     let isLive = false;
-    if (videoList.items.length === 0) {
+    if (videoList?.items?.length === 0) {
       isLive = false;
-    }
-
-    if (videoList.items[0].snippet.liveBroadcastContent === "live") {
+    } else if (
+      videoList.items &&
+      videoList?.items[0]?.snippet?.liveBroadcastContent === "live"
+    ) {
       isLive = true;
     }
 

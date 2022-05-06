@@ -2,27 +2,20 @@ import { Box, CircularProgress, Typography } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import VideoCard from "../components/VideoCard";
-import {
-  fetchYoutubeChannelById,
-  VideoInformation,
-  VideoListData,
-} from "../utils/api";
+import { crawlYoutubeChannel, VideoInformation } from "../utils/api";
 import "./popup.css";
 
 const App: React.FC<{}> = () => {
-  const [videoList, setVideoList] = useState<VideoListData>({ items: [] });
+  const [videoListCrawl, setVideoListCrawl] = useState<VideoInformation[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<any>(null);
 
   useEffect(() => {
-    fetchYoutubeChannelById()
-      .then((data) => {
-        setVideoList(data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        setError(error);
-      });
+    crawlYoutubeChannel().then((data) => {
+      console.log("data", data);
+      setVideoListCrawl(data.slice(0, 11));
+      setLoading(false);
+    });
   }, []);
 
   if (loading && !Boolean(error))
@@ -46,15 +39,15 @@ const App: React.FC<{}> = () => {
   }
 
   return (
-    <>
-      {videoList.items.map((video: VideoInformation) => {
+    <Box pb={1}>
+      {videoListCrawl.map((video: VideoInformation) => {
         return (
-          <Box my={2} key={video.id.videoId}>
-            <VideoCard videoDetail={video} />
+          <Box mb={1} key={video.gridVideoRenderer.videoId}>
+            <VideoCard videoDetail={video.gridVideoRenderer} />
           </Box>
         );
       })}
-    </>
+    </Box>
   );
 };
 

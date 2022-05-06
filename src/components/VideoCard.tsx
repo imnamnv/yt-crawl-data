@@ -1,14 +1,11 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { Box, Chip } from "@material-ui/core";
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
-import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
-import Button from "@material-ui/core/Button";
+import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import { VideoInformation } from "../utils/api";
-import { Box, Chip } from "@material-ui/core";
+import React from "react";
 
 const useStyles = makeStyles({
   root: {
@@ -19,41 +16,43 @@ const useStyles = makeStyles({
   },
 });
 
-export default function VideoCard({
-  videoDetail,
-}: {
-  videoDetail: VideoInformation;
-}) {
+export default function VideoCard({ videoDetail }: { videoDetail: any }) {
   const classes = useStyles();
 
-  const handleShowVideo = (videoUrl: string) => {
-    window.open(`https://www.youtube.com/watch?v=${videoUrl}`);
+  const handleShowVideo = (videoId: string) => {
+    window.open(`https://www.youtube.com/watch?v=${videoId}`);
   };
 
   return (
     <Card
       className={classes.root}
       onClick={() => {
-        handleShowVideo(videoDetail.id.videoId);
+        handleShowVideo(videoDetail.videoId);
       }}
     >
       <CardActionArea>
         <CardMedia
           className={classes.media}
-          image={videoDetail.snippet.thumbnails.high.url}
-          title={videoDetail.snippet.title}
+          image={videoDetail.thumbnail.thumbnails[3].url}
+          title={videoDetail.title.runs[0].text}
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2">
-            {videoDetail.snippet.title}
+            {videoDetail.title.runs[0].text}
           </Typography>
-          {videoDetail.snippet.liveBroadcastContent === "none" && (
+          {videoDetail.thumbnailOverlays[0].thumbnailOverlayTimeStatusRenderer
+            .style === "LIVE" && (
             <Box my={1}>
               <Chip label="Live" color="secondary" />
             </Box>
           )}
           <Typography variant="body2" color="textSecondary" component="p">
-            {new Date(videoDetail.snippet.publishTime).toLocaleString()}
+            {videoDetail.viewCountText.simpleText
+              ? videoDetail.viewCountText.simpleText
+              : `${videoDetail.viewCountText.runs[0].text} ${videoDetail.viewCountText.runs[1].text}`}
+          </Typography>
+          <Typography variant="body2" color="textSecondary" component="p">
+            {videoDetail.publishedTimeText?.simpleText}
           </Typography>
         </CardContent>
       </CardActionArea>

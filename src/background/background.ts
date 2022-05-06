@@ -1,37 +1,48 @@
-import { fetchYoutubeChannelById } from "../utils/api";
+import { crawlYoutubeChannel } from "../utils/api";
 
 chrome.runtime.onInstalled.addListener(() => {
+  console.log("videoList");
   checkLive();
 
   chrome.alarms.create({
-    periodInMinutes: 1,
+    periodInMinutes: 1 / 6,
   });
 });
 
 chrome.alarms.onAlarm.addListener(() => {
-  checkLive();
+  console.log("videoList");
+
+  // checkLive();
 });
 
 const checkLive = () => {
-  fetchYoutubeChannelById().then((videoList) => {
-    let isLive = false;
-    if (videoList?.items?.length === 0) {
-      isLive = false;
-    } else if (
-      videoList.items &&
-      videoList?.items[0]?.snippet?.liveBroadcastContent === "live"
-    ) {
-      isLive = true;
-    }
+  crawlYoutubeChannel()
+    .then((videoList) => {
+      let isLive = false;
 
-    chrome.action.setBadgeText({
-      text: isLive === true ? "Live" : "Off",
+      if (videoList.length === 0) {
+        isLive = false;
+      } else {
+        for (const video of videoList) {
+          if (
+            video.gridVideoRenderer.thumbnailOverlays[0]
+              .thumbnailOverlayTimeStatusRenderer === "LIVE"
+          )
+            isLive = true;
+        }
+      }
+
+      chrome.action.setBadgeText({
+        text: isLive === true ? "Live" : "Off",
+      });
+
+      if (isLive) {
+        chrome.action.setBadgeBackgroundColor({ color: "red" });
+      } else {
+        chrome.action.setBadgeBackgroundColor({ color: "gray" });
+      }
+    })
+    .catch((error) => {
+      console.log("error", error);
     });
-
-    if (isLive) {
-      chrome.action.setBadgeBackgroundColor({ color: "red" });
-    } else {
-      chrome.action.setBadgeBackgroundColor({ color: "gray" });
-    }
-  });
 };

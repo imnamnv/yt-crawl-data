@@ -17,5 +17,6 @@
   "background": {
     "service_worker": "background.js"
   },
-  "permissions": ["alarms"]
+  "permissions": ["alarms"],
+  "host_permissions": ["*://*/*"]
 }

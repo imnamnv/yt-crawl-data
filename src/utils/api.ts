@@ -1,36 +1,66 @@
-const API_KEY = "AIzaSyCqf2k5IIGA7Zs3rFeTliznHIvyrkEx63M";
-const CHANNEL_ID = "UC496j3y9SD5rfeVfwFbbsJg";
+import request from "request-promise";
+import cheerio from "cheerio"; // khai báo module cheerio
 export interface VideoInformation {
-  id: {
-    videoId: string;
-  };
-  snippet: {
-    publishedAt: string;
-    channelId: string;
-    title: string;
-    description: string;
-    thumbnails: {
-      high: {
-        url: string;
-        width: number;
-        height: number;
-      };
+  gridVideoRenderer: {
+    thumbnail: {
+      thumbnails: { height: number; url: string; width: 168 }[];
     };
-    channelTitle: string;
-    liveBroadcastContent: "live" | "none";
-    publishTime: string;
+    thumbnailOverlays: {
+      thumbnailOverlayTimeStatusRenderer: {
+        icon: {
+          icontype: "LIVE" | "DEFAULT";
+        };
+        style: string;
+      }[];
+    };
+    videoId: string;
+    viewCountText: {
+      runs?: { text: string }[];
+      simpleText?: string;
+    };
+    publishedTimeText?: {
+      simpleText?: string;
+    };
   };
 }
 export interface VideoListData {
   items: VideoInformation[];
 }
 
-export async function fetchYoutubeChannelById() {
-  const url = `https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=${CHANNEL_ID}&order=date&key=${API_KEY}&maxResults=10`;
-  const res = await fetch(url);
+export async function crawlYoutubeChannel() {
+  let data: VideoInformation[] = [];
+  var options = {
+    uri: "https://www.youtube.com/channel/UCKVzPeUvluKR9EDTn8Q-bkw/videos",
+    transform: function (body) {
+      return cheerio.load(body);
+    },
+  };
 
-  if (!res.ok) throw new Error("Can not get video of this channel");
+  await request(options)
+    .then(function ($) {
+      let scripts = $("script");
+      for (let i = scripts.length - 1; i >= 0; i--) {
+        if (
+          scripts[i].children.length > 0 &&
+          scripts[i].children[0].data.indexOf("var ytInitialData") !== -1
+        ) {
+          const result = JSON.parse(
+            scripts[i].children[0].data
+              .replace("var ytInitialData =", "")
+              .replace(";", "")
+              .trim()
+          );
 
-  const data: VideoListData = await res.json();
+          data =
+            result.contents.twoColumnBrowseResultsRenderer.tabs[1].tabRenderer
+              .content.sectionListRenderer.contents[0].itemSectionRenderer
+              .contents[0].gridRenderer.items;
+          break;
+        }
+      }
+    })
+    .catch(function (err) {
+      console.log("err", err);
+    });
   return data;
 }

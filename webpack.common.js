@@ -2,6 +2,8 @@ const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
 const HtmlPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
+
 module.exports = {
   // mode: "development",
   entry: {
@@ -49,10 +51,26 @@ module.exports = {
         },
       ],
     }),
+    new NodePolyfillPlugin(),
     ...getHtmlPlugins(["popup", "options"]),
   ],
   resolve: {
     extensions: [".tsx", ".ts", ".js"],
+    fallback: {
+      fs: false,
+      tls: false,
+      net: false,
+      module: false,
+      dns: false,
+      path: require.resolve("path-browserify"),
+      https: require.resolve("https-browserify"),
+      http: require.resolve("stream-http"),
+      zlib: require.resolve("browserify-zlib"),
+      crypto: require.resolve("crypto-browserify"),
+      stream: require.resolve("stream-browserify"),
+      timers: require.resolve("timers-browserify"),
+      domain: require.resolve("domain-browser"),
+    },
   },
   optimization: {
     splitChunks: {

@@ -1,7 +1,6 @@
 import { crawlYoutubeChannel } from "../utils/api";
 
 chrome.runtime.onInstalled.addListener(() => {
-  console.log("videoList");
   checkLive();
 
   chrome.alarms.create({
@@ -21,12 +20,15 @@ const checkLive = () => {
       if (videoList.length === 0) {
         isLive = false;
       } else {
-        for (const video of videoList) {
-          if (
-            video.gridVideoRenderer?.thumbnailOverlays[0]
-              .thumbnailOverlayTimeStatusRenderer.style === "LIVE"
-          )
-            isLive = true;
+        for (let index = 0; index < 5; index++) {
+          for (const liveStatus of videoList[index].gridVideoRenderer
+            ?.thumbnailOverlays) {
+            if (
+              liveStatus?.thumbnailOverlayTimeStatusRenderer?.style === "LIVE"
+            ) {
+              isLive = true;
+            }
+          }
         }
       }
 

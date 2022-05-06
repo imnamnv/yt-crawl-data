@@ -6,13 +6,13 @@ export interface VideoInformation {
       thumbnails: { height: number; url: string; width: 168 }[];
     };
     thumbnailOverlays: {
-      thumbnailOverlayTimeStatusRenderer: {
-        icon: {
-          icontype: "LIVE" | "DEFAULT";
+      thumbnailOverlayTimeStatusRenderer?: {
+        icon?: {
+          icontype: any;
         };
-        style: string;
-      }[];
-    };
+        style?: "LIVE" | "DEFAULT";
+      };
+    }[];
     videoId: string;
     viewCountText: {
       runs?: { text: string }[];

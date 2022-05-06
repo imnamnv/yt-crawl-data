@@ -40,8 +40,7 @@ export default function VideoCard({ videoDetail }: { videoDetail: any }) {
           <Typography gutterBottom variant="h5" component="h2">
             {videoDetail.title.runs[0].text}
           </Typography>
-          {videoDetail.thumbnailOverlays[0].thumbnailOverlayTimeStatusRenderer
-            .style === "LIVE" && (
+          {videoDetail.viewCountText.runs && (
             <Box my={1}>
               <Chip label="Live" color="secondary" />
             </Box>

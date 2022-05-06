@@ -30,7 +30,7 @@ export interface VideoListData {
 export async function crawlYoutubeChannel() {
   let data: VideoInformation[] = [];
   var options = {
-    uri: "https://www.youtube.com/channel/UCKVzPeUvluKR9EDTn8Q-bkw/videos",
+    uri: "https://www.youtube.com/c/MixiGamingofficial/videos",
     transform: function (body) {
       return cheerio.load(body);
     },

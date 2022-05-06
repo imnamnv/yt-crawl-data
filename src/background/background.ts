@@ -5,14 +5,12 @@ chrome.runtime.onInstalled.addListener(() => {
   checkLive();
 
   chrome.alarms.create({
-    periodInMinutes: 1 / 6,
+    periodInMinutes: 1 / 2,
   });
 });
 
 chrome.alarms.onAlarm.addListener(() => {
-  console.log("videoList");
-
-  // checkLive();
+  checkLive();
 });
 
 const checkLive = () => {
@@ -25,8 +23,8 @@ const checkLive = () => {
       } else {
         for (const video of videoList) {
           if (
-            video.gridVideoRenderer.thumbnailOverlays[0]
-              .thumbnailOverlayTimeStatusRenderer === "LIVE"
+            video.gridVideoRenderer?.thumbnailOverlays[0]
+              .thumbnailOverlayTimeStatusRenderer.style === "LIVE"
           )
             isLive = true;
         }

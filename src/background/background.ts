@@ -1,4 +1,4 @@
-import { crawlYoutubeChannel } from "../utils/api";
+import { checkLiveYoutubeChannel, crawlYoutubeChannel } from "../utils/api";
 
 chrome.runtime.onInstalled.addListener(() => {
   checkLive();
@@ -13,23 +13,14 @@ chrome.alarms.onAlarm.addListener(() => {
 });
 
 const checkLive = () => {
-  crawlYoutubeChannel()
-    .then((videoList) => {
+  checkLiveYoutubeChannel()
+    .then((videoDetail) => {
       let isLive = false;
 
-      if (videoList.length === 0) {
+      if (!videoDetail) {
         isLive = false;
       } else {
-        for (let index = 0; index < 5; index++) {
-          for (const liveStatus of videoList[index].gridVideoRenderer
-            ?.thumbnailOverlays) {
-            if (
-              liveStatus?.thumbnailOverlayTimeStatusRenderer?.style === "LIVE"
-            ) {
-              isLive = true;
-            }
-          }
-        }
+        isLive = true;
       }
 
       chrome.action.setBadgeText({

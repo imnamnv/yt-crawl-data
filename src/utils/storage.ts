@@ -10,7 +10,6 @@ export function setStoredIsPopup(isPopup: boolean): Promise<void> {
     const vals: LocalStorage = {
       isPopup,
     };
-    console.log("vals", vals);
     chrome.storage.local.set(vals, () => {
       resolve();
     });

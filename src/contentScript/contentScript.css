@@ -1,0 +1,12 @@
+.overlayCard{
+  position: fixed;
+  left:0;
+  top: 15%;
+  z-index: 99999;
+  max-width: 240px;
+  max-height: 100px;
+}
+
+.closeButton{
+  background-color: #FFF;
+}

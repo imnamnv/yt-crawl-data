@@ -1,4 +1,4 @@
-import { checkLiveYoutubeChannel, crawlYoutubeChannel } from "../utils/api";
+import { checkLiveYoutubeChannel } from "../utils/api";
 
 chrome.runtime.onInstalled.addListener(() => {
   checkLive();

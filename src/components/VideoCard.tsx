@@ -6,6 +6,7 @@ import CardMedia from "@material-ui/core/CardMedia";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import React from "react";
+import { setStoredVideoLink } from "../utils/storage";
 
 const useStyles = makeStyles({
   root: {
@@ -20,7 +21,7 @@ export default function VideoCard({ videoDetail }: { videoDetail: any }) {
   const classes = useStyles();
 
   const handleShowVideo = (videoId: string) => {
-    window.open(`https://www.youtube.com/watch?v=${videoId}`);
+    setStoredVideoLink(`https://www.youtube.com/embed/${videoId}`);
   };
 
   return (

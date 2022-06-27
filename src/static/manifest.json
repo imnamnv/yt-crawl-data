@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Mixi Crawl Extension",
   "description": "Mixi Crawl Extension!",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "icons": {
     "16": "icon.png",
     "48": "icon.png",
@@ -17,6 +17,12 @@
   "background": {
     "service_worker": "background.js"
   },
-  "permissions": ["alarms"],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["contentScript.js"]
+    }
+  ],
+  "permissions": ["alarms","storage"],
   "host_permissions": ["*://*/*"]
 }

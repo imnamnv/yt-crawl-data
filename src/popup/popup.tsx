@@ -56,6 +56,19 @@ const App: React.FC<{}> = () => {
 
   return (
     <Box pb={1}>
+      <Typography
+        style={{
+          position: "absolute",
+          top: 2,
+          right: 8,
+          fontStyle: "italic",
+        }}
+        variant="caption"
+        display="block"
+        gutterBottom
+      >
+        By NamNV
+      </Typography>
       {isLiving && (
         <Box mb={1}>
           <Typography variant="h5">Video Live Stream</Typography>

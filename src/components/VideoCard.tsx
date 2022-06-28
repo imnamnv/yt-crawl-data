@@ -1,4 +1,4 @@
-import { Box, Chip } from "@material-ui/core";
+import { Box, Button, CardActions, Chip } from "@material-ui/core";
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
@@ -20,18 +20,21 @@ const useStyles = makeStyles({
 export default function VideoCard({ videoDetail }: { videoDetail: any }) {
   const classes = useStyles();
 
+  const handleShowNewTab = (videoId: string) => {
+    window.open(`https://www.youtube.com/watch?v=${videoId}`);
+  };
+
   const handleShowVideo = (videoId: string) => {
     setStoredVideoLink(`https://www.youtube.com/embed/${videoId}`);
   };
 
   return (
-    <Card
-      className={classes.root}
-      onClick={() => {
-        handleShowVideo(videoDetail.videoId);
-      }}
-    >
-      <CardActionArea>
+    <Card className={classes.root}>
+      <CardActionArea
+        onClick={() => {
+          handleShowNewTab(videoDetail.videoId);
+        }}
+      >
         <CardMedia
           className={classes.media}
           image={videoDetail.thumbnail.thumbnails[3].url}
@@ -56,6 +59,28 @@ export default function VideoCard({ videoDetail }: { videoDetail: any }) {
           </Typography>
         </CardContent>
       </CardActionArea>
+      <CardActions disableSpacing={true}>
+        <Button
+          style={{ textTransform: "none" }}
+          onClick={() => {
+            handleShowVideo(videoDetail.videoId);
+          }}
+          size="small"
+          color="primary"
+        >
+          Mở cửa sổ nhỏ trên Facebook
+        </Button>
+        <Button
+          style={{ textTransform: "none" }}
+          onClick={() => {
+            handleShowNewTab(videoDetail.videoId);
+          }}
+          size="small"
+          color="primary"
+        >
+          Mở tab mới bằng Youtube
+        </Button>
+      </CardActions>
     </Card>
   );
 }
